@@ -30,7 +30,7 @@ class HomePage(Tk.Frame):
         self.canvas.place(x = 0, y = 0)
         self.button_image_1 = PhotoImage(
             file=relative_to_assets("ttd_button_1.png"))
-        self.button_1 = Button(
+        self.ttd_button_1 = Button(
             image=self.button_image_1,
             borderwidth=0,
             highlightthickness=0,
@@ -46,14 +46,14 @@ class HomePage(Tk.Frame):
 
         self.button_image_2 = PhotoImage(
             file=relative_to_assets("verifikasi_button_2.png"))
-        self.button_2 = Button(
+        self.verifikasi_button_2 = Button(
             image=self.button_image_2,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("verifikasi_button_2 clicked"),
             relief="flat"
         )
-        self.button_2.place(
+        self.verifikasi_button_2.place(
             x=462.0,
             y=555.0,
             width=356.0,
@@ -62,7 +62,7 @@ class HomePage(Tk.Frame):
 
         self.button_image_3 = PhotoImage(
             file=relative_to_assets("kunci_button_3.png"))
-        self.button_3 = Button(
+        self.kunci_button_3 = Button(
             image=self.button_image_3,
             borderwidth=0,
             highlightthickness=0,
