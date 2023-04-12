@@ -54,6 +54,6 @@ def genPubPrivKey():
         privateKey = (d,n)
         return (publicKey, privateKey)
 
-print(genPubPrivKey())
+# print(genPubPrivKey())
 
 #2: Hitung n = p.q

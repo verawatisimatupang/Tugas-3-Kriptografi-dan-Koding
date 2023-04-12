@@ -1,11 +1,11 @@
 from tkinter import Tk
-import Home
+import src.Home as Home
 
 class pageManager():
     def __init__(self):
         self.user = None
         self.window = Tk()
-        self.window.geometry("1280x832")
+        self.window.geometry("650x420")
         self.window.configure(bg = "#F4F3F9")
         self.window.title('Kriptografi dan Koding')
         self.window.resizable(False, False)
