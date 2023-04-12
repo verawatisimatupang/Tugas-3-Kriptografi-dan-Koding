@@ -17,22 +17,8 @@ def enkrip(message,PK, n):
 # dekripsi terhadap tanda-tangan S dengan kuncipublik si pengirim (PK) menggunakan persamaan dekripsi RSA:
 def dekrip(message, PK, n, S):
     hashed = Hash(message)%n
-    print(hashed)
     h= (S**PK)%n
-    print(h)
     if int(h) == int(hashed):
         return True
     else:
         return False
-    
-
-# message ="hai gais"
-# PrivK = 112751
-# PubK = 6227
-# n = 131029
-# S = 94390
-# print(enkrip(message, PrivK, n))
-# if dekrip(message, PubK, n, S):
-#     print('cuy')
-# else:
-#     print('wkwkwk')

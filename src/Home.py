@@ -1,5 +1,6 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, ttk, Frame, Label, scrolledtext, LabelFrame, IntVar, messagebox, filedialog, StringVar
+# from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, ttk, Frame, Label, scrolledtext, LabelFrame, IntVar, messagebox, filedialog, StringVar
+from tkinter import ttk, scrolledtext, messagebox, filedialog
 import tkinter as tk
 from tkinter import *
 import os
@@ -124,176 +125,207 @@ class HomePage(Frame):
         priv = key[0]
         pub = key[1]
         namafile = self.privatekey.get("1.0", "end-1c")
-        try:
-            with open(f"Key/{namafile}.pri", "w") as myfile:
-                myfile.write(f"{priv}")
-            with open(f"Key/{namafile}.pub", "w") as myfile:
-                myfile.write(f"{pub}")
-            messagebox.showinfo("info", f"Kunci berhasil disimpan di Key/{namafile}.pri dan Key/{namafile}.pub")
-        except Exception as E:
-            messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai atau {E}")
+        if namafile == '':
+            messagebox.showerror("Error",f"Masukkan nama file")
+        else:
+            try:
+                with open(f"Key/{namafile}.pri", "w") as myfile:
+                    myfile.write(f"{priv}")
+                with open(f"Key/{namafile}.pub", "w") as myfile:
+                    myfile.write(f"{pub}")
+                messagebox.showinfo("info", f"Kunci berhasil disimpan di Key/{namafile}.pri dan Key/{namafile}.pub")
+            except Exception as E:
+                messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai")
 
     #Buka Pesan yang akan ditandatangani
     def GetMessage(self):
-        self.filename_message = filedialog.askopenfilename(
-            title='Open a file',
-            initialdir='File/'
-            )
-        with open(self.filename_message, 'rb') as f:
-            self.fileinput = f.read().decode("latin-1")
-        f.close()
-        self.input.delete('0.0', tk.END)
-        self.input.insert(tk.END, f'{self.fileinput}')
-        if len(self.filename_message) > 55:
-            # namafile = self.filename_message.split("/")[-2].split[-1]
-            namafile = self.filename_message[-55:]
-        else:
-            namafile = self.filename_message
-        self.stringvar_message.set(f'{namafile}')
+        try:
+            self.filename_message = filedialog.askopenfilename(
+                title='Open a file',
+                initialdir='File/'
+                )
+            with open(self.filename_message, 'rb') as f:
+                self.fileinput = f.read().decode("latin-1")
+            f.close()
+            self.input.delete('0.0', tk.END)
+            self.input.insert(tk.END, f'{self.fileinput}')
+            if len(self.filename_message) > 55:
+                # namafile = self.filename_message.split("/")[-2].split[-1]
+                namafile = self.filename_message[-55:]
+            else:
+                namafile = self.filename_message
+            self.stringvar_message.set(f'{namafile}')
+        except:
+            False
 
 
     #Buka Pesan yang akan diverifikasi
     def GetMessage2(self):
-        self.filename_message = filedialog.askopenfilename(
-            title='Open a file',
-            initialdir='File/'
-            )
-        with open(self.filename_message, 'rb') as f:
-            self.fileinput = f.read().decode("latin-1")
-        f.close()
-        self.input2.delete('0.0', tk.END)
-        self.input2.insert(tk.END, f'{self.fileinput}')
-        if len(self.filename_message) > 55:
-            namafile = self.filename_message[-55:]
-        else:
-            namafile = self.filename_message
-        self.stringvar_message2.set(f'{namafile}')
+        try:
+            self.filename_message = filedialog.askopenfilename(
+                title='Open a file',
+                initialdir='File/'
+                )
+            with open(self.filename_message, 'rb') as f:
+                self.fileinput = f.read().decode("latin-1")
+            f.close()
+            self.input2.delete('0.0', tk.END)
+            self.input2.insert(tk.END, f'{self.fileinput}')
+            if len(self.filename_message) > 55:
+                namafile = self.filename_message[-55:]
+            else:
+                namafile = self.filename_message
+            self.stringvar_message2.set(f'{namafile}')
+        except:
+            False
 
     # Buka Signature
     def GetSignature(self):
-        self.filename_signature = filedialog.askopenfilename(
-            title='Open a file',
-            initialdir='Signature/',
-            filetypes =[('Text files', '*.txt')]
-            )
-        with open(self.filename_signature, 'rb') as f:
-            self.fileinput_signature = f.read().decode("latin-1")
-        f.close()
-        if len(self.filename_signature) > 55:
-            namafile = self.filename_signature[-55:]
-        else:
-            namafile = self.filename_signature
-        self.stringvar_signature.set(f'{namafile}')
+        try:
+            self.filename_signature = filedialog.askopenfilename(
+                title='Open a file',
+                initialdir='Signature/',
+                filetypes =[('Text files', '*.txt')]
+                )
+            with open(self.filename_signature, 'rb') as f:
+                self.fileinput_signature = f.read().decode("latin-1")
+            f.close()
+            if len(self.filename_signature) > 55:
+                namafile = self.filename_signature[-55:]
+            else:
+                namafile = self.filename_signature
+            self.stringvar_signature.set(f'{namafile}')
+        except:
+            False
 
     # Buka file pri
     def GetPrivateKey(self):
-        self.filename_key = filedialog.askopenfilename(
-            title='Open a file',
-            initialdir='Key/',
-            filetypes =[('Private key files', '*.pri')]
-            )
-        with open(self.filename_key, 'rb') as f:
-            self.fileinput = f.read().decode("latin-1")
-        f.close()
-        key = self.fileinput[1:-1]
-        E,N = str(key).split(", ")
-        self.e.delete('0.0', tk.END)
-        self.e.insert(tk.END, f'{int(E)}')
-        self.n.delete('0.0', tk.END)
-        self.n.insert(tk.END, f'{int(N)}')
+        try:
+            self.filename_key = filedialog.askopenfilename(
+                title='Open a file',
+                initialdir='Key/',
+                filetypes =[('Private key files', '*.pri')]
+                )
+            with open(self.filename_key, 'rb') as f:
+                self.fileinput = f.read().decode("latin-1")
+            f.close()
+            key = self.fileinput[1:-1]
+            E,N = str(key).split(", ")
+            self.e.delete('0.0', tk.END)
+            self.e.insert(tk.END, f'{int(E)}')
+            self.n.delete('0.0', tk.END)
+            self.n.insert(tk.END, f'{int(N)}')
+        except:
+            False
 
     # Buka file pub
     def GetPublicKey(self):
-        self.filename_key = filedialog.askopenfilename(
-            title='Open a file',
-            initialdir='Key/',
-            filetypes =[('Public key files', '*.pub')]
-            )
-        with open(self.filename_key, 'rb') as f:
-            self.fileinput = f.read().decode("latin-1")
-        f.close()
-        key = self.fileinput[1:-1]
-        D,N = str(key).split(", ")
-        self.d.delete('0.0', tk.END)
-        self.d.insert(tk.END, f'{int(D)}')
-        self.n2.delete('0.0', tk.END)
-        self.n2.insert(tk.END, f'{int(N)}')
+        try:
+            self.filename_key = filedialog.askopenfilename(
+                title='Open a file',
+                initialdir='Key/',
+                filetypes =[('Public key files', '*.pub')]
+                )
+            with open(self.filename_key, 'rb') as f:
+                self.fileinput = f.read().decode("latin-1")
+            f.close()
+            key = self.fileinput[1:-1]
+            D,N = str(key).split(", ")
+            self.d.delete('0.0', tk.END)
+            self.d.insert(tk.END, f'{int(D)}')
+            self.n2.delete('0.0', tk.END)
+            self.n2.insert(tk.END, f'{int(N)}')
+        except:
+            False
+
 
     # Sign
     def Sign(self):
-        message = self.input.get("1.0", "end-1c")
-        PK = int(self.e.get("1.0", "end-1c"))
-        n = int(self.n.get("1.0", "end-1c"))
-        if self.radio1.get() == 1:
-            if ("<DS>" in message) and ("</DS>" in message):
-                messagebox.showerror("Error","Pesan sudah ditandatangani")
-            else:
-                if self.filename_message[-3:] == 'txt':
-                    signature = Sign.enkrip(message, PK, n)
-                    with open(self.filename_message, 'w') as f:
-                        mess_sign = f"{message}\n<DS>{signature}</DS>"
-                        f.write(mess_sign)
-                        self.input.delete('0.0', tk.END)
-                        self.input.insert(tk.END, f'{mess_sign}')
-                    f.close()
-                    messagebox.showinfo("info", "Pesan berhasil ditandatangani")
-                else:
-                    messagebox.showerror("Error","Tipe pesan tidak bisa ditandatangani di dalam file")
-        elif self.radio1.get() == 2:
-            if ("<DS>" in message) and ("</DS>" in message and self.filename_message[-3:] == 'txt'):
-                messagebox.showerror("Error","Pesan sudah ditandatangani")
-            else:
-                signature = Sign.enkrip(message, PK, n)
-                namafile = self.filename_message.split("/")[-1].split(".")[0]
-                try:
-                    with open(f"Signature/sign_{namafile}.txt", "w") as myfile:
-                        myfile.write(f"<DS> {signature} </DS>")
-                    messagebox.showinfo("info", f"Signature berhasil disimpan di Signature/sign_{namafile}.txt")
-                except Exception as E:
-                    messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai atau {E}")
+        message=''
+        PK = ''
+        n = ''
+        try:
+            message = self.input.get("1.0", "end-1c")
+            PK = int(self.e.get("1.0", "end-1c"))
+            n = int(self.n.get("1.0", "end-1c"))
+        except:
+            False
+        if self.stringvar_message.get() == "Tidak ada file dipilih":
+            messagebox.showerror("Error","File yang akan ditandatangani belum dipilih")
+        elif PK == '' or n == '':
+            messagebox.showerror("Error","Key belum dimasukkan")
         else:
-            messagebox.showerror("Error","Tipe Tanda Tangan belum dipilih")
+            if self.radio1.get() == 1:
+                if ("<DS>" in message) and ("</DS>" in message):
+                    messagebox.showerror("Error","Pesan sudah ditandatangani")
+                else:
+                    if self.filename_message[-3:] == 'txt':
+                        signature = Sign.enkrip(message, PK, n)
+                        with open(self.filename_message, 'w') as f:
+                            mess_sign = f"{message}\n<DS>{signature}</DS>"
+                            f.write(mess_sign)
+                            self.input.delete('0.0', tk.END)
+                            self.input.insert(tk.END, f'{mess_sign}')
+                        f.close()
+                        messagebox.showinfo("info", "Pesan berhasil ditandatangani")
+                    else:
+                        messagebox.showerror("Error","Tipe pesan tidak bisa ditandatangani di dalam file")
+            elif self.radio1.get() == 2:
+                if ("<DS>" in message) and ("</DS>" in message and self.filename_message[-3:] == 'txt'):
+                    messagebox.showerror("Error","Pesan sudah ditandatangani")
+                else:
+                    signature = Sign.enkrip(message, PK, n)
+                    namafile = self.filename_message.split("/")[-1].split(".")[0]
+                    try:
+                        with open(f"Signature/sign_{namafile}.txt", "w") as myfile:
+                            myfile.write(f"<DS> {signature} </DS>")
+                        messagebox.showinfo("info", f"Signature berhasil disimpan di Signature/sign_{namafile}.txt")
+                    except Exception as E:
+                        messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai atau {E}")
+            else:
+                messagebox.showerror("Error","Tipe Tanda Tangan belum dipilih")
 
-    # Cek key
+    # verif
+    def verif(self, m, PK, n, S):
+        verifying = Sign.dekrip(m, PK, n, S)
+        if verifying:
+            messagebox.showinfo("info", "Tanda tangan valid")
+        else:
+            messagebox.showerror("Error","Tanda tangan tidak valid")
 
     # Verifying
     def Verifying(self):
-        message = self.input2.get("1.0", "end-1c")
-        PK = int(self.d.get("1.0", "end-1c"))
-        n = int(self.n2.get("1.0", "end-1c"))
-        if self.radio2.get() == 1:
-            if self.filename_message[-3:] == 'txt':
-                print(message)
-                if ("<DS>" in message) and ("</DS>" in message):
-                    S2 = message.split("<DS>")[-1].split("</DS>")[0]
-                    S = int(message.split("<DS>")[-1].split("</DS>")[0])
-                    m = message.replace(f'\n<DS>{S2}</DS>', "")
-                    # mess_sign = f"{message}\n<DS>{signature}</DS>"
-                    if m == "hai gais":
-                        print("mantap")
-                    else:
-                        print('kok gini')
-                    verifying = Sign.dekrip(m, PK, n, S)
-                    if verifying:
-                        messagebox.showinfo("info", "Tanda tangan valid")
-                    else:
-                        messagebox.showerror("Error","Tanda tangan tidak valid")
-                else:
-                    messagebox.showerror("Error","Pesan belum ditandatangani")
-            else:
-                messagebox.showerror("Error","Tipe pesan tidak bisa ditandatangani di dalam file") 
-        elif self.radio1.get() == 2:
-            signature = self.fileinput_signature
-            if ("<DS>" in message) and ("</DS>" in message and self.filename_message[-3:] == 'txt'):
-                messagebox.showerror("Error","Pesan sudah ditandatangani")
-            else:
-                signature = Sign.enkrip(message, PK, n)
-                namafile = self.filename_message.split("/")[-1].split(".")[0]
-                try:
-                    with open(f"Signature/sign_{namafile}.txt", "w") as myfile:
-                        myfile.write(f"<DS> {signature} </DS>")
-                    messagebox.showinfo("info", f"Signature berhasil disimpan di Signature/sign_{namafile}.txt")
-                except Exception as E:
-                    messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai atau {E}")
+        message=''
+        PK = ''
+        n = ''
+        S = ''
+        try:
+            message = self.input2.get("1.0", "end-1c")
+            PK = int(self.d.get("1.0", "end-1c"))
+            n = int(self.n2.get("1.0", "end-1c"))
+        except:
+            False
+        if self.stringvar_message2.get()== "Tidak ada file dipilih":
+            messagebox.showerror("Error","File yang sudah ditandatangani belum dipilih")
+        elif PK == '' or n == '':
+            messagebox.showerror("Error","Key belum dimasukkan")
         else:
-            messagebox.showerror("Error","Tipe Tanda Tangan belum dipilih")
+            if self.radio2.get() == 1:
+                if self.filename_message[-3:] == 'txt':
+                    if ("<DS>" in message) and ("</DS>" in message):
+                        S2 = message.split("<DS>")[-1].split("</DS>")[0]
+                        S = int(message.split("<DS>")[-1].split("</DS>")[0])
+                        m = message.replace(f'\n<DS>{S2}</DS>', "").rstrip()
+                        self.verif(m, PK, n, S)
+                    else:
+                        messagebox.showerror("Error","Pesan belum ditandatangani")
+                else:
+                    messagebox.showerror("Error","Tipe pesan tidak bisa ditandatangani di dalam file") 
+            elif self.radio2.get() == 2:
+                if self.stringvar_signature.get() == "Tidak ada file dipilih":
+                    messagebox.showerror("Error","File yang berisi tanda tangan belum dipilih")
+                else:
+                    S = int(self.fileinput_signature.split("<DS>")[-1].split("</DS>")[0])
+                    self.verif(message, PK, n, S)
+            else:
+                messagebox.showerror("Error","Tipe Tanda Tangan belum dipilih")
