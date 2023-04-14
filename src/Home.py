@@ -109,7 +109,7 @@ class HomePage(Frame):
         self.radio2 = IntVar()
         ttk.Radiobutton(tab3,text="Tanda tangan dalam file",variable=self.radio2, value=1).grid(sticky='w',row=4, column= 1)
         ttk.Radiobutton(tab3,text="Tanda tangan terpisah ", variable=self.radio2, value=2).grid(sticky='w',row=5, column=1)
-        self.b5 = Button(tab3,text="Verivying", command=lambda: self.Verifying(), bg='#FA8072')
+        self.b5 = Button(tab3,text="Verifying", command=lambda: self.Verifying(), bg='#FA8072')
         self.b5.grid(row=6, columnspan = 3, pady = 2, padx = 5)
 
     def startPage(self):
