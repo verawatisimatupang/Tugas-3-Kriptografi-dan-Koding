@@ -154,7 +154,6 @@ class HomePage(Frame):
         except:
             False
 
-
     #Buka Pesan yang akan diverifikasi
     def GetMessage2(self):
         try:
@@ -241,7 +240,6 @@ class HomePage(Frame):
             self.n2.config(state = DISABLED)
         except:
             False
-
 
     # Sign
     def Sign(self):
