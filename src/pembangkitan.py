@@ -53,7 +53,3 @@ def genPubPrivKey():
         # pasangan (d,n)
         privateKey = (d,n)
         return (publicKey, privateKey)
-
-# print(genPubPrivKey())
-
-#2: Hitung n = p.q

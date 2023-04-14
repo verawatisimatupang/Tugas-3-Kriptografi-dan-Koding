@@ -1,17 +1,9 @@
-from pathlib import Path
-# from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, ttk, Frame, Label, scrolledtext, LabelFrame, IntVar, messagebox, filedialog, StringVar
 from tkinter import ttk, scrolledtext, messagebox, filedialog
-import tkinter as tk
 from tkinter import *
+import tkinter as tk
 import os
 
-import src.pembangkitan as pembangkitan, src.Sign as Sign
-
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"../img")
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
+import src.pembangkitan as pembangkitan, src.EnkripDekrip as EnkripDekrip
 
 class HomePage(Frame):
     def __init__(self, master, pageManager):
@@ -24,7 +16,7 @@ class HomePage(Frame):
     def Home(self):
         self.canvas = Canvas(
             self.master,
-            bg = "#F4F3F9",
+            # bg = "#FFFFFF",
             height = 832,
             width = 1280,
             bd = 0,
@@ -37,9 +29,9 @@ class HomePage(Frame):
         ttk.Label(self.master, text ="18220001 Stephanie Hutagalung - 18220002 Verawati Esteria S. Simatupang - 18220010 Agnes Tamara ", font='Helvetika 8').pack()
         self.tabControl = ttk.Notebook(self.master)
         
-        tab1 = Frame(self.tabControl)
-        tab2 = Frame(self.tabControl)
-        tab3 = Frame(self.tabControl)
+        tab1 = Frame(self.tabControl, background="#FFFFFF")
+        tab2 = Frame(self.tabControl, background="#FFFFFF")
+        tab3 = Frame(self.tabControl, background="#FFFFFF")
 
         self.tabControl.add(tab1, text ='Generator Key')
         self.tabControl.add(tab2, text ='Signing')
@@ -47,73 +39,77 @@ class HomePage(Frame):
         self.tabControl.pack(expand = 1, fill ="both")
         
         # tab1
-        ttk.Label(tab1, text ="Nama output kunci privat dan publik").grid(sticky='w', column = 0, row = 0, padx = 10, pady = 10)
+        ttk.Label(tab1, text ="Nama output kunci privat dan publik", background="#FFFFFF").grid(sticky='w', column = 0, row = 0, padx = 10, pady = 10)
         self.privatekey = Text(tab1, width=60, height=1, font=("Times New Roman", 10))
         self.privatekey.grid(column = 1, row=0, padx = 10, pady = 10)
-        self.b1 = Button(tab1,text="Generate", command=lambda: self.GenerateKey())
+        self.b1 = Button(tab1,text="Generate", bg='#FA8072',command=lambda: self.GenerateKey())
         self.b1.grid(row=2, columnspan = 3, pady = 2, padx = 5)       
         
         # tab2
-        ttk.Label(tab2, text ="Pilih File").grid(sticky='w',column = 0, row = 0, padx = 10, pady = 10)
+        ttk.Label(tab2, text ="Pilih File", background="#FFFFFF").grid(sticky='w',column = 0, row = 0, padx = 10, pady = 10)
         self.stringvar_message = StringVar()
         self.stringvar_message.set("Tidak ada file dipilih")
-        self.filemessage = Label(tab2, textvariable = self.stringvar_message)
+        self.filemessage = Label(tab2, textvariable = self.stringvar_message, background="#FFFFFF")
         self.filemessage.grid(sticky='w', column = 1, row=0, padx = 10, pady = 10)
-        self.b2 = Button(tab2,text="Pilih File", command=lambda: self.GetMessage())
+        self.b2 = Button(tab2,text="Pilih File", command=lambda: self.GetMessage(), bg='#FA8072')
         self.b2.grid(row=0, column = 2, pady = 2, padx = 5)        
-        ttk.Label(tab2, text ="Kunci Privat").grid(sticky='w', column = 0, row = 1, padx = 10, pady = 10)
-        privatekey = LabelFrame(tab2, relief=FLAT)
-        ttk.Label(privatekey, text ="d").pack(side = LEFT,  padx=6)
-        self.e = Text(privatekey, width=20, height=1, font=("Times New Roman", 10))
+        ttk.Label(tab2, text ="Kunci Privat", background="#FFFFFF").grid(sticky='w', column = 0, row = 1, padx = 10, pady = 10)
+        privatekey = LabelFrame(tab2, relief=FLAT, background="#FFFFFF")
+        ttk.Label(privatekey, text ="e", background="#FFFFFF").pack(side = LEFT,  padx=6)
+        self.e = Text(privatekey, width=20, height=1, font=("Times New Roman", 10), background="#FFFFFF")
         self.e.pack(side = LEFT,  padx=6)
-        ttk.Label(privatekey, text ="n").pack(side = LEFT,  padx=6)
-        self.n = Text(privatekey, width=20, height=1, font=("Times New Roman", 10))
+        self.e.config(state = DISABLED)
+        ttk.Label(privatekey, text ="n", background="#FFFFFF").pack(side = LEFT,  padx=6)
+        self.n = Text(privatekey, width=20, height=1, font=("Times New Roman", 10), background="#FFFFFF")
         self.n.pack(side = LEFT,  padx=6)
+        self.n.config(state = DISABLED)
         privatekey.grid(sticky='w', column = 1, row = 1, padx = 10, pady = 10)
-        self.b3 = Button(tab2,text="Pilih File", command=lambda: self.GetPrivateKey())
+        self.b3 = Button(tab2,text="Pilih File", command=lambda: self.GetPrivateKey(), bg='#FA8072')
         self.b3.grid(row=1, column = 2, pady = 2, padx = 5)  
         self.input = scrolledtext.ScrolledText(tab2, wrap=tk.WORD,width=90, height=8, font=("Times New Roman", 10))
         self.input.grid(sticky="w", row = 2, columnspan = 3, pady = 10, padx = 30)
-        ttk.Label(tab2, text ="Tipe Tanda Tangan").grid(sticky='w',column = 0, row = 3, padx = 10, pady = 10)
+        ttk.Label(tab2, text ="Tipe Tanda Tangan", background="#FFFFFF").grid(sticky='w',column = 0, row = 3, padx = 10, pady = 10)
         self.radio1 = IntVar()
         ttk.Radiobutton(tab2,text="Tanda tangan dalam file", variable=self.radio1, value=1).grid(sticky='w',row=3, column= 1)
         ttk.Radiobutton(tab2,text="Tanda tangan terpisah ", variable=self.radio1, value=2).grid(sticky='w',row=4, column=1)
-        self.b4 = Button(tab2,text="Sign", command=lambda: self.Sign())
+        self.b4 = Button(tab2,text="Sign", command=lambda: self.Sign(), bg='#FA8072')
         self.b4.grid(row=5, columnspan = 3, pady = 2, padx = 5)
 
         # tab3
-        ttk.Label(tab3, text ="Pilih File").grid(sticky='w',column = 0, row = 0, padx = 10, pady = 10)
+        ttk.Label(tab3, text ="Pilih File", background="#FFFFFF").grid(sticky='w',column = 0, row = 0, padx = 10, pady = 10)
         self.stringvar_message2 = StringVar()
         self.stringvar_message2.set("Tidak ada file dipilih")
-        self.filemessage = Label(tab3, textvariable = self.stringvar_message2)
+        self.filemessage = Label(tab3, textvariable = self.stringvar_message2, background="#FFFFFF")
         self.filemessage.grid(sticky='w', column = 1, row=0, padx = 10, pady = 10)
-        self.b2 = Button(tab3,text="Pilih File", command=lambda: self.GetMessage2())
+        self.b2 = Button(tab3,text="Pilih File", command=lambda: self.GetMessage2(), bg='#FA8072')
         self.b2.grid(row=0, column = 2, pady = 2, padx = 5)        
-        ttk.Label(tab3, text ="Tanda Tangan").grid(sticky='w',column = 0, row = 1, padx = 10, pady = 10)
+        ttk.Label(tab3, text ="Tanda Tangan", background="#FFFFFF").grid(sticky='w',column = 0, row = 1, padx = 10, pady = 10)
         self.stringvar_signature = StringVar()
         self.stringvar_signature.set("Tidak ada file dipilih")
-        self.filesignature = Label(tab3, textvariable = self.stringvar_signature)
+        self.filesignature = Label(tab3, textvariable = self.stringvar_signature, background="#FFFFFF")
         self.filesignature.grid(sticky='w', column = 1, row=1, padx = 10, pady = 10)
-        self.b3 = Button(tab3,text="Pilih File", command=lambda: self.GetSignature())
+        self.b3 = Button(tab3,text="Pilih File", command=lambda: self.GetSignature(), bg='#FA8072')
         self.b3.grid(row=1, column = 2, pady = 2, padx = 5)  
-        ttk.Label(tab3, text ="Kunci Publik").grid(sticky='w',column = 0, row = 2, padx = 10, pady = 10)
-        publickey = LabelFrame(tab3, relief=FLAT)
-        ttk.Label(publickey, text ="p").pack(side = LEFT,  padx=6)
-        self.d = Text(publickey, width=20, height=1, font=("Times New Roman", 10))
+        ttk.Label(tab3, text ="Kunci Publik", background="#FFFFFF").grid(sticky='w',column = 0, row = 2, padx = 10, pady = 10)
+        publickey = LabelFrame(tab3, relief=FLAT, background="#FFFFFF")
+        ttk.Label(publickey, text ="d", background="#FFFFFF").pack(side = LEFT,  padx=6)
+        self.d = Text(publickey, width=20, height=1, font=("Times New Roman", 10), background="#FFFFFF")
         self.d.pack(side = LEFT,  padx=6)
-        ttk.Label(publickey, text ="n").pack(side = LEFT,  padx=6)
-        self.n2 = Text(publickey, width=20, height=1, font=("Times New Roman", 10))
+        self.d.config(state = DISABLED)
+        ttk.Label(publickey, text ="n", background="#FFFFFF").pack(side = LEFT,  padx=6)
+        self.n2 = Text(publickey, width=20, height=1, font=("Times New Roman", 10), background="#FFFFFF")
         self.n2.pack(side = LEFT,  padx=6)
+        self.n2.config(state = DISABLED)
         publickey.grid(sticky='w', column = 1, row = 2, padx = 10, pady = 10)
-        self.b4 = Button(tab3,text="Pilih File", command=lambda: self.GetPublicKey())
+        self.b4 = Button(tab3,text="Pilih File", command=lambda: self.GetPublicKey(), bg='#FA8072')
         self.b4.grid(row=2, column = 2, pady = 2, padx = 5)  
         self.input2 = scrolledtext.ScrolledText(tab3, wrap=tk.WORD,width=90, height=8, font=("Times New Roman", 10))
         self.input2.grid(sticky="w", row = 3, columnspan = 3, pady = 10, padx = 30)
-        ttk.Label(tab3, text ="Tipe Tanda Tangan").grid(sticky='w',column = 0, row = 4, padx = 10, pady = 10)
+        ttk.Label(tab3, text ="Tipe Tanda Tangan", background="#FFFFFF").grid(sticky='w',column = 0, row = 4, padx = 10, pady = 10)
         self.radio2 = IntVar()
-        ttk.Radiobutton(tab3,text="Tanda tangan dalam file", variable=self.radio2, value=1).grid(sticky='w',row=4, column= 1)
+        ttk.Radiobutton(tab3,text="Tanda tangan dalam file",variable=self.radio2, value=1).grid(sticky='w',row=4, column= 1)
         ttk.Radiobutton(tab3,text="Tanda tangan terpisah ", variable=self.radio2, value=2).grid(sticky='w',row=5, column=1)
-        self.b5 = Button(tab3,text="Verivying", command=lambda: self.Verifying())
+        self.b5 = Button(tab3,text="Verivying", command=lambda: self.Verifying(), bg='#FA8072')
         self.b5.grid(row=6, columnspan = 3, pady = 2, padx = 5)
 
     def startPage(self):
@@ -135,7 +131,7 @@ class HomePage(Frame):
                     myfile.write(f"{pub}")
                 messagebox.showinfo("info", f"Kunci berhasil disimpan di Key/{namafile}.pri dan Key/{namafile}.pub")
             except Exception as E:
-                messagebox.showerror("Error",f"Kunci tidak dapat disimpan karena nama file tidak sesuai")
+                messagebox.showerror("Error",f"Kunci tidak dapat disimpan, {E}")
 
     #Buka Pesan yang akan ditandatangani
     def GetMessage(self):
@@ -211,10 +207,14 @@ class HomePage(Frame):
             f.close()
             key = self.fileinput[1:-1]
             E,N = str(key).split(", ")
+            self.e.config(state = NORMAL)
             self.e.delete('0.0', tk.END)
             self.e.insert(tk.END, f'{int(E)}')
+            self.e.config(state = DISABLED)
+            self.n.config(state = NORMAL)
             self.n.delete('0.0', tk.END)
             self.n.insert(tk.END, f'{int(N)}')
+            self.n.config(state = DISABLED)
         except:
             False
 
@@ -231,10 +231,14 @@ class HomePage(Frame):
             f.close()
             key = self.fileinput[1:-1]
             D,N = str(key).split(", ")
+            self.d.config(state = NORMAL)
             self.d.delete('0.0', tk.END)
             self.d.insert(tk.END, f'{int(D)}')
+            self.d.config(state = DISABLED)
+            self.n2.config(state = NORMAL)
             self.n2.delete('0.0', tk.END)
             self.n2.insert(tk.END, f'{int(N)}')
+            self.n2.config(state = DISABLED)
         except:
             False
 
@@ -260,9 +264,9 @@ class HomePage(Frame):
                     messagebox.showerror("Error","Pesan sudah ditandatangani")
                 else:
                     if self.filename_message[-3:] == 'txt':
-                        signature = Sign.enkrip(message, PK, n)
+                        signature = EnkripDekrip.enkrip(message, PK, n)
                         with open(self.filename_message, 'w') as f:
-                            mess_sign = f"{message}\n<DS>{signature}</DS>"
+                            mess_sign = f"{message}<DS> {signature} </DS>"
                             f.write(mess_sign)
                             self.input.delete('0.0', tk.END)
                             self.input.insert(tk.END, f'{mess_sign}')
@@ -274,7 +278,7 @@ class HomePage(Frame):
                 if ("<DS>" in message) and ("</DS>" in message and self.filename_message[-3:] == 'txt'):
                     messagebox.showerror("Error","Pesan sudah ditandatangani")
                 else:
-                    signature = Sign.enkrip(message, PK, n)
+                    signature = EnkripDekrip.enkrip(message, PK, n)
                     namafile = self.filename_message.split("/")[-1].split(".")[0]
                     try:
                         with open(f"Signature/sign_{namafile}.txt", "w") as myfile:
@@ -287,7 +291,7 @@ class HomePage(Frame):
 
     # verif
     def verif(self, m, PK, n, S):
-        verifying = Sign.dekrip(m, PK, n, S)
+        verifying = EnkripDekrip.dekrip(m, PK, n, S)
         if verifying:
             messagebox.showinfo("info", "Tanda tangan valid")
         else:
@@ -315,7 +319,7 @@ class HomePage(Frame):
                     if ("<DS>" in message) and ("</DS>" in message):
                         S2 = message.split("<DS>")[-1].split("</DS>")[0]
                         S = int(message.split("<DS>")[-1].split("</DS>")[0])
-                        m = message.replace(f'\n<DS>{S2}</DS>', "").rstrip()
+                        m = message.replace(f'<DS>{S2}</DS>', "")
                         self.verif(m, PK, n, S)
                     else:
                         messagebox.showerror("Error","Pesan belum ditandatangani")
@@ -325,7 +329,10 @@ class HomePage(Frame):
                 if self.stringvar_signature.get() == "Tidak ada file dipilih":
                     messagebox.showerror("Error","File yang berisi tanda tangan belum dipilih")
                 else:
-                    S = int(self.fileinput_signature.split("<DS>")[-1].split("</DS>")[0])
-                    self.verif(message, PK, n, S)
+                    try:
+                        S = int(self.fileinput_signature.split("<DS>")[-1].split("</DS>")[0])
+                        self.verif(message, PK, n, S)
+                    except:
+                       messagebox.showerror("Error","Tidak ada tanda tangan yang ditemukan.") 
             else:
                 messagebox.showerror("Error","Tipe Tanda Tangan belum dipilih")

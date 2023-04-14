@@ -1,10 +1,10 @@
 # Implementasi Program Tanda-tangan Digital dengan Menggunakan Algoritma RSA dan Fungsi hash SHA-3
 #  Menu pembangkitan tanda-tangan digital (signing)
-from hashlib import sha3_224
+from hashlib import sha3_256
 
 # Menghitung nilai hash dari pesan M
 def Hash(message):
-    hash = sha3_224(message.encode("latin-1")).hexdigest()
+    hash = sha3_256(message.encode("latin-1")).hexdigest()
     hashed = int(hash, 16)
     return hashed
 

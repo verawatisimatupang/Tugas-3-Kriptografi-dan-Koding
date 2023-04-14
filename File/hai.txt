@@ -1,2 +1,1 @@
-Hai gais
-<DS>65235</DS>
+Hai gais<DS> 23972 </DS>
