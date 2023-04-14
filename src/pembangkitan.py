@@ -12,7 +12,6 @@ def isPrime(number):
                 return False
         return True
 
-# ini masih bilangan yang ga besar
 def primeNumber(minRange, maxRange):
     while(1):
         number = random.randint(minRange, maxRange)
